@@ -1,8 +1,8 @@
-#Stockstatz CLI Tool
+# Stockstatz CLI Tool
 
 This is a simple CLI tool written in Go that takes in a ticker symbol, start date, and end date and calculates the simple return and maximum drawdown for the given period. It then publishes the results to the 'stockstatz' Telegram channel.
 
-##Installation
+## Installation
 
 To use this tool, you need to have Go installed on your machine. You can download it from the official Go website.
 
@@ -10,7 +10,7 @@ Once you have Go installed, you can install the tool using the following command
 
 ```go install github.com/zareifar/stock-stat```
 
-##Usage
+## Usage
 
 To use the tool, you can either run the program using go by running the following command in the project directory:
 
@@ -30,6 +30,6 @@ The sample includes data from 2017-09-01 to 2017-10-31 for the following tickers
 
 **MMM, AXP, AAPL, BA, CAT, CVX, CSCO, KO, DIS, XOM, GE, GS, HD, IBM, INTC, JNJ, JPM, MCD, MRK, MSFT, NKE, PFE, PG, TRV, UTX, UNH, VZ, V, WMT**
 
-##License
+## License
 
 This tool is released under the MIT License. See LICENSE for more information.
