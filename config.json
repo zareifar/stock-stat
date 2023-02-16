@@ -1,0 +1,21 @@
+{
+  "Debug": false,
+  "Core": {
+    "DateInputLayout": "2006-01-02"
+  },
+  "Api": {
+    "Nasdaq": {
+      "APIKey": "bPsfPT2JoK7BJnH5iajC",
+      "QueryColumns": "adj_close,date",
+      "DateFormat": "2006-01-02",
+      "EndpointURL": "https://data.nasdaq.com/api/v3/datatables/QUOTEMEDIA/PRICES"
+    },
+    "Telegram": {
+      "APIKey": "5904969016:AAHItkDuVSVZUUCbqqqM-ZYPLsLHYh61ijo",
+      "ChannelId": "-1001770034565",
+      "ChannelUsername": "stockstatz",
+      "EndpointURL": "https://api.telegram.org/bot",
+      "SendMessageSlug": "sendMessage"
+    }
+  }
+}
