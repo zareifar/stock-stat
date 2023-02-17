@@ -14,7 +14,7 @@ Once you have Go installed, you can install the tool using the following command
 
 To use the tool, you can either run the program using go by running the following command in the project directory:
 
-```go run . 2017-01-01 to 2018-01-01```
+```go run . AAPL 2017-01-01 to 2018-01-01```
 
 or build the project and use it independantly, by running the following command in the project directory:
 
