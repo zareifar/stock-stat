@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-	"sort"
 	"time"
 )
 
@@ -72,19 +71,19 @@ func DisplayResults(
 	endDate time.Time,
 	simpleRetrunValue float64,
 	maxDrawdownValue float64,
-	){
-		config := GetConfig()
-		resultMessage := fmt.Sprintf(
-			"Calculated result for %s from %s to %s:\n",
-			symbol,
-			startDate.Format(config.Api.Nasdaq.DateFormat),
-			endDate.Format(config.Api.Nasdaq.DateFormat),
-		)
-		resultMessage += fmt.Sprintf("Simple return: %.2f%%\n", (simpleRetrunValue*100))
-		resultMessage += fmt.Sprintf("Maximum drawdown: %.2f%%\n", (maxDrawdownValue*100))
+) {
+	config := GetConfig()
+	resultMessage := fmt.Sprintf(
+		"Calculated result for %s from %s to %s:\n",
+		symbol,
+		startDate.Format(config.Api.Nasdaq.DateFormat),
+		endDate.Format(config.Api.Nasdaq.DateFormat),
+	)
+	resultMessage += fmt.Sprintf("Simple return: %.2f%%\n", (simpleRetrunValue * 100))
+	resultMessage += fmt.Sprintf("Maximum drawdown: %.2f%%\n", (maxDrawdownValue * 100))
 
-		fmt.Println(resultMessage)
-		PostMessageToTelegramChannel(resultMessage)
+	fmt.Println(resultMessage)
+	PostMessageToTelegramChannel(resultMessage)
 }
 
 func ParseJSONData(jsonData []byte) JSONData {
@@ -95,15 +94,6 @@ func ParseJSONData(jsonData []byte) JSONData {
 	}
 
 	return data
-}
-
-func SortChronologically(arr [][]interface{}, dateIndex int){
-	config := GetConfig()
-	sort.Slice(arr, func(i, j int) bool {
-		currDate, _ := time.Parse(config.Core.DateInputLayout, arr[i][dateIndex].(string))
-		nextDate, _ := time.Parse(config.Core.DateInputLayout, arr[j][dateIndex].(string))
-		return currDate.Before(nextDate)
-	})
 }
 
 func validateSymbol(symbol string) bool {

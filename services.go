@@ -1,8 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math"
+	"sort"
+	"time"
 )
 
 func CalculateMaxDrawdown(data JSONData) (float64, error) {
@@ -14,19 +17,18 @@ func CalculateMaxDrawdown(data JSONData) (float64, error) {
 	// 		error (error): error if encountered any
 	adjCloseIndex := findColIndex("adj_close", data.Datatable.Columns)
 	dateIndex := findColIndex("date", data.Datatable.Columns)
-	if adjCloseIndex == -1 {
-		return 0, fmt.Errorf("adj_close column was not found")
+	stockData := data.Datatable.Data
+
+	err := validateStockData(adjCloseIndex, dateIndex, stockData)
+	if err != nil {
+		return 0, err
 	}
 
-	if len(data.Datatable.Data) < 2  {
-		return 0, fmt.Errorf("not enough data were provided to calculate maximum drawdown")
-	}
-
-	SortChronologically(data.Datatable.Data, dateIndex)
+	sortDataChronologically(stockData, dateIndex)
 
 	// Flatten array
-	adjClosePrices := make([]float64, len(data.Datatable.Data))
-	for i, data := range data.Datatable.Data{
+	adjClosePrices := make([]float64, len(stockData))
+	for i, data := range stockData {
 		adjClosePrices[i] = data[adjCloseIndex].(float64)
 	}
 
@@ -57,17 +59,14 @@ func CalculateSimpleReturn(data JSONData) (float64, error) {
 	// 		error (error): error if encountered any
 	adjCloseIndex := findColIndex("adj_close", data.Datatable.Columns)
 	dateIndex := findColIndex("date", data.Datatable.Columns)
-	if adjCloseIndex == -1 {
-		return 0, fmt.Errorf("adj_close column was not found")
-	}
-
 	stockData := data.Datatable.Data
 
-	if len(stockData) < 2  {
-		return 0, fmt.Errorf("not enough data were provided to calculate simple return")
+	err := validateStockData(adjCloseIndex, dateIndex, stockData)
+	if err != nil {
+		return 0, err
 	}
 
-	SortChronologically(data.Datatable.Data, dateIndex)
+	sortDataChronologically(data.Datatable.Data, dateIndex)
 
 	startPrice := stockData[0][adjCloseIndex].(float64)
 	endPrice := stockData[len(stockData)-1][adjCloseIndex].(float64)
@@ -112,6 +111,22 @@ func calculateRollingMax(numbers []float64) []float64 {
 	return rollingMax
 }
 
+func validateStockData(adjCloseIndex int, dateIndex int, stockData [][]interface{}) error {
+	if adjCloseIndex == -1 {
+		return errors.New("adj_close column was not found")
+	}
+
+	if dateIndex == -1 {
+		return errors.New("date column was not found")
+	}
+
+	if len(stockData) < 2 {
+		return errors.New("not enough data were provided to perform calculation")
+	}
+
+	return nil
+}
+
 func findColIndex(colName string, columns []Column) int {
 	// Find the index of the first column that matches the name with given colName
 	// Patameters:
@@ -129,4 +144,17 @@ func findColIndex(colName string, columns []Column) int {
 	}
 
 	return colIndex
+}
+
+func sortDataChronologically(arr [][]interface{}, dateIndex int) {
+	// Sort stock data according to the date in ascending order
+	// Parameters:
+	// 	arr ([][]interface{}): stock data containing a date field
+	//  dateIndex (int): index of the date column in stock data array
+	config := GetConfig()
+	sort.Slice(arr, func(i, j int) bool {
+		currDate, _ := time.Parse(config.Core.DateInputLayout, arr[i][dateIndex].(string))
+		nextDate, _ := time.Parse(config.Core.DateInputLayout, arr[j][dateIndex].(string))
+		return currDate.Before(nextDate)
+	})
 }

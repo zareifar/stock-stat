@@ -11,7 +11,8 @@ import (
 )
 
 func FetchStockData(symbol string, startDate time.Time, endDate time.Time) []byte {
-	// Fetches historical stock data for a given symbol between the specified start and end dates from the NASDAQ API.
+	// Fetches historical stock data for a given symbol between the specified
+	// start and end dates from the NASDAQ API.
 	// Parameters:
 	//   symbol (string): The stock symbol to retrieve data for.
 	//   startDate (time.Time): The start date of the data range, inclusive.
@@ -69,15 +70,15 @@ func PostMessageToTelegramChannel(message string) {
 	reqUrl.Path = path.Join(reqUrl.Path, config.Api.Telegram.SendMessageSlug)
 
 	data := url.Values{
-		"chat_id":{config.Api.Telegram.ChannelId},
-		"text": {message},
+		"chat_id": {config.Api.Telegram.ChannelId},
+		"text":    {message},
 	}
 
 	resp, err := http.PostForm(reqUrl.String(), data)
 	if err != nil {
 		log.Println(err)
 	}
-	
+
 	if resp.StatusCode != 200 {
 		log.Println("There was a problem with posting information to Telegram:", resp.Status, resp.Body)
 	} else {

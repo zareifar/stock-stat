@@ -12,7 +12,8 @@ func main() {
 		This program is using the Nasdaq API in "none-subscriber" mode,
 		and as a result you can view a subset of the data.
 		The sample includes data from 2017-09-01 to 2017-10-31 for the following tickers:
-		MMM, AXP, AAPL, BA, CAT, CVX, CSCO, KO, DIS, XOM, GE, GS, HD, IBM, INTC, JNJ, JPM, MCD, MRK, MSFT, NKE, PFE, PG, TRV, UTX, UNH, VZ, V, WMT
+		MMM, AXP, AAPL, BA, CAT, CVX, CSCO, KO, DIS, XOM, GE, GS, HD, IBM, INTC, JNJ, JPM,
+		MCD, MRK, MSFT, NKE, PFE, PG, TRV, UTX, UNH, VZ, V, WMT
 	`)
 
 	if err := run(os.Args[1:]); err != nil {
@@ -42,6 +43,6 @@ func run(args []string) error {
 	}
 
 	DisplayResults(symbol, startDate, endDate, simpleReturn, maximumDrawdown)
-	
+
 	return nil
 }

@@ -49,7 +49,7 @@ func TestCalculateMaxDrawdownWithInsufficientData(t *testing.T) {
 
 	_, err := CalculateMaxDrawdown(data)
 	if err == nil {
-		t.Fatalf("expected error but got none")
+		t.Fatalf("expected error due to insufficient data, but got none")
 	}
 }
 
@@ -72,7 +72,30 @@ func TestCalculateMaxDrawdownWithNoAdjCloseColumn(t *testing.T) {
 
 	_, err := CalculateMaxDrawdown(data)
 	if err == nil {
-		t.Fatalf("expected error but got none")
+		t.Fatalf("expected error due to missing adj_close column, but got none")
+	}
+}
+
+func TestCalculateMaxDrawdownWithNoDateColumn(t *testing.T) {
+	data := JSONData{
+		Datatable: Datatable{
+			Columns: []Column{
+				{Name: "adj_close", Type: "double"},
+			},
+			Data: [][]interface{}{
+				{100.0},
+				{110.0},
+				{90.0},
+				{95.0},
+				{80.0},
+				{85.0},
+			},
+		},
+	}
+
+	_, err := CalculateMaxDrawdown(data)
+	if err == nil {
+		t.Fatalf("expected error due to missing date column, but got none")
 	}
 }
 
@@ -103,6 +126,26 @@ func TestCalculateSimpleReturn(t *testing.T) {
 	}
 }
 
+func TestCalculateSimpleReturnWithNoDateColumn(t *testing.T) {
+	data := JSONData{
+		Datatable: Datatable{
+			Columns: []Column{
+				{Name: "adj_close", Type: "double"},
+			},
+			Data: [][]interface{}{
+				{100.0},
+				{110.0},
+			},
+		},
+	}
+
+	_, err := CalculateSimpleReturn(data)
+
+	if err == nil {
+		t.Error("Expected an error due to missing date column, but got nil")
+	}
+}
+
 func TestCalculateSimpleReturnWithNoAdjCloseColumn(t *testing.T) {
 	data := JSONData{
 		Datatable: Datatable{
@@ -110,8 +153,8 @@ func TestCalculateSimpleReturnWithNoAdjCloseColumn(t *testing.T) {
 				{Name: "date", Type: "date"},
 			},
 			Data: [][]interface{}{
-				{"2022-01-01", 100.0},
-				{"2022-01-02", 110.0},
+				{"2022-01-01"},
+				{"2022-01-02"},
 			},
 		},
 	}
@@ -123,7 +166,7 @@ func TestCalculateSimpleReturnWithNoAdjCloseColumn(t *testing.T) {
 	}
 }
 
-func TestCalculateSimpleReturn_WithInsufficientData(t *testing.T) {
+func TestCalculateSimpleReturnWithInsufficientData(t *testing.T) {
 	data := JSONData{
 		Datatable: Datatable{
 			Columns: []Column{
@@ -143,7 +186,7 @@ func TestCalculateSimpleReturn_WithInsufficientData(t *testing.T) {
 	}
 }
 
-func TestCalculateSimpleReturn_WithZeroStartPrice(t *testing.T) {
+func TestCalculateSimpleReturnWithZeroStartPrice(t *testing.T) {
 	data := JSONData{
 		Datatable: Datatable{
 			Columns: []Column{

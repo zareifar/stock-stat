@@ -7,7 +7,7 @@ import (
 
 type Config struct {
 	Debug bool
-	Core struct {
+	Core  struct {
 		DateInputLayout string `json:"DateInputLayout"`
 	} `json:"Core"`
 	Api struct {
